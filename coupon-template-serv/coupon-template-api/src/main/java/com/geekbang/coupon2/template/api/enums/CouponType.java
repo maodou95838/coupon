@@ -1,7 +1,6 @@
 package com.geekbang.coupon2.template.api.enums;
 
 import lombok.AllArgsConstructor;
-import lombok.Generated;
 import lombok.Getter;
 
 import java.util.stream.Stream;

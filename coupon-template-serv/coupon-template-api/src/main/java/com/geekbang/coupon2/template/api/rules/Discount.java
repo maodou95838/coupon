@@ -1,5 +1,9 @@
 package com.geekbang.coupon2.template.api.rules;
 
+/**
+ * 定义优惠券的使用规则
+ * @author Jackie Hou
+ */
 public class Discount {
 
     // 对于满减券 - quota是减掉的钱数，单位是分

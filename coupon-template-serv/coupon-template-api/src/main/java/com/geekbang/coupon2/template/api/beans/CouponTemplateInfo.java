@@ -1,7 +1,15 @@
 package com.geekbang.coupon2.template.api.beans;
 
 import com.geekbang.coupon2.template.api.rules.TemplateRule;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class CouponTemplateInfo {
 
     private Long id;

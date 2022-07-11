@@ -2,10 +2,11 @@ package com.geekbang.coupon2.template.dao.entity;
 
 import com.geekbang.coupon2.template.api.enums.CouponType;
 import com.geekbang.coupon2.template.api.rules.TemplateRule;
+import com.geekbang.coupon2.template.dao.converter.RuleConverter;
+import lombok.Builder;
+import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import org.springframework.stereotype.Controller;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -13,6 +14,8 @@ import java.util.Date;
 @Entity
 @Table(name = "coupon_template")
 @EntityListeners(AuditingEntityListener.class)
+@Builder
+@Data
 public class CouponTemplate implements Serializable {
 
     @Id
@@ -47,5 +50,6 @@ public class CouponTemplate implements Serializable {
      * 优惠券核算规则
      */
     @Column(name = "rule", nullable = false)
+    @Convert(converter = RuleConverter.class)
     private TemplateRule rule;
 }

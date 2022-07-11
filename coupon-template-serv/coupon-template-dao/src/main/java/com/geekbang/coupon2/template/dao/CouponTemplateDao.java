@@ -19,13 +19,13 @@ public interface CouponTemplateDao extends JpaRepository<CouponTemplate, Long> {
      */
     List<CouponTemplate> findAllByShopId(Long shopId);
 
-    /**
+   /* *//**
      * In查询， 支持分页
      * @param id
      * @param page
      * @return
-     */
-    Page<CouponTemplate> findAllByIdIn(List<Long> id, Pageable page);
+     *//*
+    Page<CouponTemplate> findAllByIdIn(List<Long> id, Pageable page);*/
 
     /**
      * 根据shopId 和可用状态查询
