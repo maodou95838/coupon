@@ -34,14 +34,14 @@ public interface CouponTemplateService {
      *//*
     void deleteTemplate(Long id);
 
-    *//**
+    /**
      * 批量读取模板
      * @param ids
      * @return
-     *//*
+     */
     Map<Long, CouponTemplateInfo> getTemplateInfoMap(Collection<Long> ids);
 
-   *//* *//**//**
+   /* *//**//**
      * 分页查询
      * @param request
      * @return
