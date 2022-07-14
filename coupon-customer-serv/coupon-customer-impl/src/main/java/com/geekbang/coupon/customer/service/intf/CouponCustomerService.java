@@ -21,14 +21,29 @@ public interface CouponCustomerService {
 
     /**
      * 核销优惠券
+     * @param info
+     * @return
      */
     ShoppingCart placeOrder(ShoppingCart info);
 
-    // 优惠券金额试算
+    /**
+     * 优惠券金额试算
+     * @param order
+     * @return
+     */
     SimulationResponse simulateOrderPrice(SimulationOrder order);
 
+    /**
+     * 删除个人优惠券
+     * @param userId
+     * @param couponId
+     */
     void deleteCoupon(Long userId, Long couponId);
 
-    // 查询用户优惠券
+    /**
+     * 查询用户优惠券
+     * @param request
+     * @return
+     */
     List<CouponInfo> findCoupon(SearchCoupon request);
 }

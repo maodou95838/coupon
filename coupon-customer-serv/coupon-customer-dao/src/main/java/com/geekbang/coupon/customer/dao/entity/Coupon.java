@@ -13,6 +13,9 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
 import java.util.Date;
 
+/**
+ * 优惠券，实际指的是用户已领但未使用的优惠券
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

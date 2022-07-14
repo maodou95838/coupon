@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * 客户controller
+ */
 @Slf4j
 @RestController
 @RequestMapping("coupon-customer")
@@ -22,32 +25,55 @@ public class CouponCustomerController {
     @Autowired
     private CouponCustomerService customerService;
 
+    /**
+     * 领券，实际是从模板生成一个优惠券，并和用户关联
+     * @param request
+     * @return
+     */
     @PostMapping("requestCoupon")
     public Coupon requestCoupon(@RequestBody RequestCoupon request) {
         return customerService.requestCoupon(request);
     }
 
-    // 用户删除优惠券
+
+    /**
+     * 用户删除优惠券
+     * @param userId
+     * @param couponId
+     */
     @DeleteMapping("deleteCoupon")
     public void deleteCoupon(@RequestParam("userId") Long userId,
                                        @RequestParam("couponId") Long couponId) {
         customerService.deleteCoupon(userId, couponId);
     }
 
-    // 用户模拟计算每个优惠券的优惠价格
+    /**
+     * 用户模拟计算每个优惠券的优惠价格
+     * @param order
+     * @return
+     */
     @PostMapping("simulateOrder")
     public SimulationResponse simulate( @RequestBody SimulationOrder order) {
         return customerService.simulateOrderPrice(order);
     }
 
-    // ResponseEntity - 指定返回状态码 - 可以作为一个课后思考题
+
+    /**
+     * 核销
+     * @param info
+     * @return
+     */
     @PostMapping("placeOrder")
     public ShoppingCart checkout( @RequestBody ShoppingCart info) {
         return customerService.placeOrder(info);
     }
 
 
-    // 实现的时候最好封装一个search object类
+    /**
+     * 实现的时候最好封装一个search object类
+     * @param request
+     * @return
+     */
     @PostMapping("findCoupon")
     public List<CouponInfo> findCoupon(@RequestBody SearchCoupon request) {
         return customerService.findCoupon(request);
