@@ -1,6 +1,6 @@
 package com.geekbang.coupon.calculation.api.beans;
 
-import com.geekbang.coupon2.template.api.beans.CouponInfo;
+import com.geekbang.coupon.template.api.beans.CouponInfo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

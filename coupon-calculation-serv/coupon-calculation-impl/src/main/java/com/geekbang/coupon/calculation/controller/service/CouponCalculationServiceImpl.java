@@ -7,7 +7,7 @@ import com.geekbang.coupon.calculation.api.beans.SimulationResponse;
 import com.geekbang.coupon.calculation.controller.service.intf.CouponCalculationService;
 import com.geekbang.coupon.calculation.template.CouponTemplateFactory;
 import com.geekbang.coupon.calculation.template.RuleTemplate;
-import com.geekbang.coupon2.template.api.beans.CouponInfo;
+import com.geekbang.coupon.template.api.beans.CouponInfo;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

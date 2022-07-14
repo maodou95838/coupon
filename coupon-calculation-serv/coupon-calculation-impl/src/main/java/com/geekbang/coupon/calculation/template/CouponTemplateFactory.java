@@ -2,8 +2,8 @@ package com.geekbang.coupon.calculation.template;
 
 import com.geekbang.coupon.calculation.api.beans.ShoppingCart;
 import com.geekbang.coupon.calculation.template.impl.*;
-import com.geekbang.coupon2.template.api.beans.CouponTemplateInfo;
-import com.geekbang.coupon2.template.api.enums.CouponType;
+import com.geekbang.coupon.template.api.beans.CouponTemplateInfo;
+import com.geekbang.coupon.template.api.enums.CouponType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

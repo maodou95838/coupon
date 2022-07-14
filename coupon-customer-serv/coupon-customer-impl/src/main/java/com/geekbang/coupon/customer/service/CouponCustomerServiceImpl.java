@@ -4,23 +4,23 @@ package com.geekbang.coupon.customer.service;
 import com.geekbang.coupon.calculation.api.beans.ShoppingCart;
 import com.geekbang.coupon.calculation.api.beans.SimulationOrder;
 import com.geekbang.coupon.calculation.api.beans.SimulationResponse;
-import com.geekbang.coupon.calculation.controller.service.intf.CouponCalculationService;
 import com.geekbang.coupon.customer.api.beans.RequestCoupon;
 import com.geekbang.coupon.customer.api.beans.SearchCoupon;
 import com.geekbang.coupon.customer.api.enums.CouponStatus;
 import com.geekbang.coupon.customer.dao.CouponDao;
 import com.geekbang.coupon.customer.dao.entity.Coupon;
 import com.geekbang.coupon.customer.service.intf.CouponCustomerService;
-import com.geekbang.coupon2.template.api.beans.CouponInfo;
-import com.geekbang.coupon2.template.api.beans.CouponTemplateInfo;
-import com.geekbang.coupon2.template.impl.services.CouponTemplateService;
+import com.geekbang.coupon.template.api.beans.CouponInfo;
+import com.geekbang.coupon.template.api.beans.CouponTemplateInfo;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import javax.transaction.Transactional;
 import java.util.Calendar;
@@ -37,10 +37,7 @@ public class CouponCustomerServiceImpl implements CouponCustomerService {
     private CouponDao couponDao;
 
     @Autowired
-    private CouponTemplateService templateService;
-
-    @Autowired
-    private CouponCalculationService calculationService;
+    private WebClient.Builder webClientBuiler;
 
 
     @Override
@@ -93,7 +90,13 @@ public class CouponCustomerServiceImpl implements CouponCustomerService {
         List<Long> templateIds = coupons.stream()
                 .map(Coupon::getTemplateId)
                 .collect(Collectors.toList());
-        Map<Long, CouponTemplateInfo> templateMap = templateService.getTemplateInfoMap(templateIds);
+        Map<Long, CouponTemplateInfo> templateMap = webClientBuiler.build()
+                .get()
+                .uri("http://coupon-template-serv/template/getBatch?ids=" + templateIds)
+                .retrieve()
+                .bodyToMono(new ParameterizedTypeReference<Map<Long, CouponTemplateInfo>>() {
+                })
+                .block();
         coupons.stream().forEach(e -> e.setTemplateInfo(templateMap.get(e.getTemplateId())));
 
         return coupons.stream()
@@ -106,7 +109,12 @@ public class CouponCustomerServiceImpl implements CouponCustomerService {
      */
     @Override
     public Coupon requestCoupon(RequestCoupon request) {
-        CouponTemplateInfo templateInfo = templateService.loadTemplateInfo(request.getCouponTemplateId());
+        CouponTemplateInfo templateInfo = webClientBuiler.build()
+                .get()
+                .uri("http://coupon-template-serv/template/getTemplate?id=" + request.getCouponTemplateId())
+                .retrieve()
+                .bodyToMono(CouponTemplateInfo.class)
+                .block();
 
         // 模板不存在则报错
         if (templateInfo == null) {
@@ -162,6 +170,13 @@ public class CouponCustomerServiceImpl implements CouponCustomerService {
                     .orElseThrow(() -> new RuntimeException("Coupon not found"));
 
             CouponInfo couponInfo = CouponConverter.convertToCoupon(coupon);
+//            CouponTemplateInfo templateInfo = webClientBuiler.build().post()
+//                    .uri("http://coupon-calculation-serv/calculator/checkout")
+//                    .bodyValue(order)
+//                    .retrieve()
+//                    .bodyToMono(ShoppingCart.class)
+//                    .block();
+
             couponInfo.setTemplate(templateService.loadTemplateInfo(coupon.getTemplateId()));
             order.setCouponInfos(Lists.newArrayList(couponInfo));
         }

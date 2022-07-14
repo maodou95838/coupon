@@ -1,7 +1,7 @@
 package com.geekbang.coupon.customer.service;
 
 import com.geekbang.coupon.customer.dao.entity.Coupon;
-import com.geekbang.coupon2.template.api.beans.CouponInfo;
+import com.geekbang.coupon.template.api.beans.CouponInfo;
 
 public class CouponConverter {
 

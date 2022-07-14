@@ -2,7 +2,7 @@ package com.geekbang.coupon.customer.dao.entity;
 
 import com.geekbang.coupon.customer.api.enums.CouponStatus;
 import com.geekbang.coupon.customer.dao.convertor.CouponStatusConverter;
-import com.geekbang.coupon2.template.api.beans.CouponTemplateInfo;
+import com.geekbang.coupon.template.api.beans.CouponTemplateInfo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
