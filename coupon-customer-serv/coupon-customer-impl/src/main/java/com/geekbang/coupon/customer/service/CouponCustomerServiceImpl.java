@@ -9,6 +9,8 @@ import com.geekbang.coupon.customer.api.beans.SearchCoupon;
 import com.geekbang.coupon.customer.api.enums.CouponStatus;
 import com.geekbang.coupon.customer.dao.CouponDao;
 import com.geekbang.coupon.customer.dao.entity.Coupon;
+import com.geekbang.coupon.customer.feign.CalculationService;
+import com.geekbang.coupon.customer.feign.TemplateService;
 import com.geekbang.coupon.customer.service.intf.CouponCustomerService;
 import com.geekbang.coupon.template.api.beans.CouponInfo;
 import com.geekbang.coupon.template.api.beans.CouponTemplateInfo;
@@ -16,11 +18,9 @@ import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.reactive.function.client.WebClient;
 
 import javax.transaction.Transactional;
 import java.util.Calendar;
@@ -28,8 +28,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import static com.geekbang.coupon.customer.constant.Constant.TRAFFIC_VERSION;
 
 @Slf4j
 @Service
@@ -39,7 +37,10 @@ public class CouponCustomerServiceImpl implements CouponCustomerService {
     private CouponDao couponDao;
 
     @Autowired
-    private WebClient.Builder webClientBuilder;
+    private TemplateService templateService;
+
+    @Autowired
+    private CalculationService calculationService;
 
 
     @Override
@@ -70,12 +71,7 @@ public class CouponCustomerServiceImpl implements CouponCustomerService {
         order.setCouponInfos(couponInfos);
 
         // 调用接口试算服务
-        return webClientBuilder.build().post()
-                .uri("http://coupon-calculation-serv/calculator/simulate")
-                .bodyValue(order)
-                .retrieve()
-                .bodyToMono(SimulationResponse.class)
-                .block();
+        return calculationService.simulate(order);
     }
 
     /**
@@ -84,12 +80,7 @@ public class CouponCustomerServiceImpl implements CouponCustomerService {
      * @return
      */
     private CouponTemplateInfo getCouponTemplateInfo(CouponInfo couponInfo) {
-        CouponTemplateInfo templateInfo = webClientBuilder.build()
-                .get()
-                .uri("http://coupon-template-serv/template/getTemplate?id=" + couponInfo.getTemplateId())
-                .retrieve()
-                .bodyToMono(CouponTemplateInfo.class)
-                .block();
+        CouponTemplateInfo templateInfo = templateService.getTemplate(couponInfo.getTemplateId());
         return templateInfo;
     }
 
@@ -114,13 +105,7 @@ public class CouponCustomerServiceImpl implements CouponCustomerService {
         List<Long> templateIds = coupons.stream()
                 .map(Coupon::getTemplateId)
                 .collect(Collectors.toList());
-        Map<Long, CouponTemplateInfo> templateMap = webClientBuilder.build()
-                .get()
-                .uri("http://coupon-template-serv/template/getBatch?ids=" + templateIds)
-                .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<Map<Long, CouponTemplateInfo>>() {
-                })
-                .block();
+        Map<Long, CouponTemplateInfo> templateMap = templateService.getTemplateInBatch(templateIds);
         coupons.stream().forEach(e -> e.setTemplateInfo(templateMap.get(e.getTemplateId())));
 
         return coupons.stream()
@@ -133,13 +118,10 @@ public class CouponCustomerServiceImpl implements CouponCustomerService {
      */
     @Override
     public Coupon requestCoupon(RequestCoupon request) {
-        CouponTemplateInfo templateInfo = webClientBuilder.build()
-                .get()
-                .uri("http://coupon-template-serv/template/getTemplate?id=" + request.getCouponTemplateId())
-                .header(TRAFFIC_VERSION, request.getTrafficVersion())
-                .retrieve()
-                .bodyToMono(CouponTemplateInfo.class)
-                .block();
+        CouponInfo couponInfo = CouponInfo.builder()
+                .templateId(request.getCouponTemplateId())
+                .build();
+        CouponTemplateInfo templateInfo = getCouponTemplateInfo(couponInfo);
 
         // 模板不存在则报错
         if (templateInfo == null) {
@@ -201,12 +183,7 @@ public class CouponCustomerServiceImpl implements CouponCustomerService {
         }
 
         // order清算
-        ShoppingCart checkoutInfo = webClientBuilder.build().post()
-                .uri("http://coupon-calculation-serv/calculator/checkout")
-                .bodyValue(order)
-                .retrieve()
-                .bodyToMono(ShoppingCart.class)
-                .block();
+        ShoppingCart checkoutInfo = calculationService.checkout(order);
 
         if (coupon != null) {
             // 如果优惠券没有被结算掉，而用户传递了优惠券，报错提示该订单满足不了优惠条件
