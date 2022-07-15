@@ -13,4 +13,9 @@ public class RequestCoupon {
     private Long userId;
 
     private Long couponTemplateId;
+
+    /**
+     * loadBalancer - 用于流量打标
+     */
+    private String trafficVersion;
 }
