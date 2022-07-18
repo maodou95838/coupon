@@ -10,6 +10,8 @@ import com.geekbang.coupon.customer.service.intf.CouponCustomerService;
 import com.geekbang.coupon.template.api.beans.CouponInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,7 +22,11 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("coupon-customer")
+@RefreshScope
 public class CouponCustomerController {
+
+    @Value(("${disableCouponRequest:false}"))
+    private Boolean disableCoupon;
 
     @Autowired
     private CouponCustomerService customerService;
@@ -32,6 +38,10 @@ public class CouponCustomerController {
      */
     @PostMapping("requestCoupon")
     public Coupon requestCoupon(@RequestBody RequestCoupon request) {
+        if (disableCoupon) {
+            log.info("暂停领券");
+            return null;
+        }
         return customerService.requestCoupon(request);
     }
 
