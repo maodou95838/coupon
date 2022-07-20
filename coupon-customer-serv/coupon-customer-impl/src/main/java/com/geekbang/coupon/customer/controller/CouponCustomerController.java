@@ -1,5 +1,6 @@
 package com.geekbang.coupon.customer.controller;
 
+import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import com.geekbang.coupon.calculation.api.beans.ShoppingCart;
 import com.geekbang.coupon.calculation.api.beans.SimulationOrder;
 import com.geekbang.coupon.calculation.api.beans.SimulationResponse;
@@ -37,6 +38,7 @@ public class CouponCustomerController {
      * @return
      */
     @PostMapping("requestCoupon")
+    @SentinelResource(value = "requestCoupon")
     public Coupon requestCoupon(@RequestBody RequestCoupon request) {
         if (disableCoupon) {
             log.info("暂停领券");
@@ -85,6 +87,7 @@ public class CouponCustomerController {
      * @return
      */
     @PostMapping("findCoupon")
+    @SentinelResource(value = "cuntomer-findCoupon")
     public List<CouponInfo> findCoupon(@RequestBody SearchCoupon request) {
         return customerService.findCoupon(request);
     }

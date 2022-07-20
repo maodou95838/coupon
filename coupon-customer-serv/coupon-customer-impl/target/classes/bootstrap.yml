@@ -1,4 +1,3 @@
-
 spring:
   # 必须把name属性从application.yml迁移过来，否则无法动态刷新
   application:
