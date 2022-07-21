@@ -23,10 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import javax.transaction.Transactional;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -149,6 +146,7 @@ public class CouponCustomerServiceImpl implements CouponCustomerService {
                 .userId(request.getUserId())
                 .shopId(templateInfo.getShopId())
                 .status(CouponStatus.AVAILABLE)
+                .createdTime(new Date())
                 .build();
         couponDao.save(coupon);
         return coupon;

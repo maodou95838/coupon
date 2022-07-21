@@ -80,3 +80,9 @@ spring:
       probability: 1.0
       # 每秒采样数字最高为1000
       rate: 1000
+  zipkin:
+    sender:
+      type: rabbit
+    rabbitmq:
+      addresses: 192.168.140.140:5672
+      queue: zipkin
