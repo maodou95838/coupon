@@ -8,11 +8,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @Slf4j
 public class CalculationApplication {
     public static void main(String[] args) {
-        try {
-            SpringApplication.run(CalculationApplication.class, args);
-        } catch (Exception e) {
-            log.debug(e.toString());
-            e.printStackTrace();
-        }
+        SpringApplication.run(CalculationApplication.class, args);
     }
 }

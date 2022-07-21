@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableTransactionManagement
 @LoadBalancerClient(value = "coupon-template-serv", configuration = CanaryRuleConfiguration.class)
 public class CustomerApplication {
+
     public static void main(String[] args) {
         SpringApplication.run(CustomerApplication.class, args);
     }
