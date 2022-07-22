@@ -18,6 +18,8 @@ spring:
     open-in-view: false
 
   cloud:
+    inetutils:
+      preferred-networks: 172.16.60
     nacos:
       discovery:
         # Nacos的服务注册地址，可以配置多个，逗号分隔

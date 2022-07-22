@@ -1,0 +1,51 @@
+server:
+  port: 30000
+  error:
+    include-message: always
+
+
+spring:
+  application:
+    name: coupon-gateway
+
+  cloud:
+    inetutils:
+      preferred-networks: 172.16.60
+    nacos:
+      discovery:
+        server-addr: 172.16.60.99:8848
+        heart-beat-interval: 5000
+        heart-beat-timeout: 15000
+        cluster-name: Cluster-A
+        namespace: dev
+        group: myGroup
+        register-enabled: true
+        naming-load-cache-at-start: false
+        watch:
+          enabled: true
+        watch-delay: 30000
+    gateway:
+      discovery:
+        locator:
+          lower-case-service-id: true
+          enabled: true
+      routes:
+        - id: coupon-customer
+          # lb代表从注册中心获取服务，且已负载均衡方式转发
+          uri: lb://coupon-customer-serv
+          predicates:
+            - Path=/coupon-customer/**
+          # 加上StripPrefix=1，否则转发到后端服务时会带上consumer前缀
+#          filters:
+#            - StripPrefix=1
+
+        - id: test
+          uri: http://www.baidu.com
+          predicates:
+            - Path=/test/**
+
+#        - id: test2
+#          uri: http://www.ifeng.com
+#          order: 9
+#          predicates:
+#            - Path=/**
