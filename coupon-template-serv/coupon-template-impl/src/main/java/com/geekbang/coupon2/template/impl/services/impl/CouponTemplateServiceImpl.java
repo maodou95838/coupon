@@ -10,7 +10,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * 优惠券模板类相关操作
@@ -124,19 +129,19 @@ public class CouponTemplateServiceImpl implements CouponTemplateService {
         if (rows == 0) {
             throw new IllegalArgumentException("Template Not Found: " + id);
         }
-    }
+    }*/
 
-    *//**
+    /**
      * 批量读取模板
-     *//*
+     */
     @Override
     public Map<Long, CouponTemplateInfo> getTemplateInfoMap(Collection<Long> ids) {
 
-        List<com.geekbang.coupon.template.dao.entity.CouponTemplate> templates = templateDao.findAllById(ids);
+        List<CouponTemplate> templates = templateDao.findAllById(ids);
 
         return templates.stream()
                 .map(CouponTemplateConverter::convertToTemplateInfo)
                 .collect(Collectors.toMap(CouponTemplateInfo::getId, Function.identity()));
-    }*/
+    }
 
 }

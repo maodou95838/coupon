@@ -8,21 +8,22 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 /**
- * 购物车
+ * 价格试算
  * @author Jackie Hou
  */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ShoppingCart {
+public class SimulationOrder {
 
     private List<Product> products;
 
-    private Long couponId;
+
+    private List<Long> couponIds;
+
 
     private List<CouponInfo> couponInfos;
 
-    private Long cost;
 
     private Long userId;
 }
