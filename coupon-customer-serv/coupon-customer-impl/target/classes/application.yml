@@ -19,6 +19,7 @@ spring:
 
   cloud:
     inetutils:
+      #多网卡，防止ip乱窜
       preferred-networks: 172.16.60
     nacos:
       discovery:

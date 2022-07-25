@@ -31,21 +31,13 @@ spring:
           enabled: true
       routes:
         - id: coupon-customer
-          # lb代表从注册中心获取服务，且已负载均衡方式转发
           uri: lb://coupon-customer-serv
           predicates:
-            - Path=/coupon-customer/**
-          # 加上StripPrefix=1，否则转发到后端服务时会带上consumer前缀
-#          filters:
-#            - StripPrefix=1
+            - Path=/gateway/coupon-customer/**
+          filters:
+            - StripPrefix=1
 
-        - id: test
-          uri: http://www.baidu.com
+        - id: test2
+          uri: http://www.ifeng.com
           predicates:
-            - Path=/test/**
-
-#        - id: test2
-#          uri: http://www.ifeng.com
-#          order: 9
-#          predicates:
-#            - Path=/**
+            - Path=/**
