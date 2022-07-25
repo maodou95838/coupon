@@ -6,6 +6,7 @@ import com.geekbang.coupon.calculation.api.beans.SimulationResponse;
 import com.geekbang.coupon.customer.api.beans.RequestCoupon;
 import com.geekbang.coupon.customer.api.beans.SearchCoupon;
 import com.geekbang.coupon.customer.dao.entity.Coupon;
+import com.geekbang.coupon.customer.event.CouponProducer;
 import com.geekbang.coupon.customer.service.intf.CouponCustomerService;
 import com.geekbang.coupon.template.api.beans.CouponInfo;
 import lombok.extern.slf4j.Slf4j;
@@ -88,5 +89,32 @@ public class CouponCustomerController {
     public List<CouponInfo> findCoupon(@RequestBody SearchCoupon request) {
         return customerService.findCoupon(request);
     }
+
+
+    //~~
+
+    /**
+     * 消息
+     * @param request
+     */
+    @PostMapping("requestCouponEvent")
+    public void requestCouponEvent(@RequestBody RequestCoupon request) {
+        couponProducer.sendCoupon(request);
+    }
+
+
+    /**
+     * 消息  用户删除优惠券
+     * @param userId
+     * @param couponId
+     */
+    @DeleteMapping("deleteCouponEvent")
+    public void deleteCouponEvent(@RequestParam("userId") Long userId,
+                                  @RequestParam("couponId") Long couponId) {
+        couponProducer.deleteCoupon(userId, couponId);
+    }
+
+    @Autowired
+    private CouponProducer couponProducer;
 
 }
