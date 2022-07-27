@@ -15,23 +15,24 @@ import java.util.stream.Collectors;
 @Service
 public class CouponConsumer {
 
-    @Autowired
-    private CouponCustomerService customerService;
-
-    @Bean
-    public Consumer addCoupon() {
-        return request -> {
-            log.info("received: {}", request);
-            customerService.requestCoupon(request);
-        };
-    }
-
-    @Bean
-    public Consumer deleteCoupon() {
-        return request -> {
-            log.info("received: {}", request);
-            List params = Arrays.stream(request.split(",")).map(Long::valueOf).collect(Collectors.toList());
-            customerService.deleteCoupon(params.get(0), params.get(1));
-        };
-    }
+//    @Autowired
+//    private CouponCustomerService customerService;
+//
+//    @Bean
+//    public Consumer addCoupon() {
+//        return request -> {
+//            log.info("received: {}", request);
+//            customerService.requestCoupon(request);
+//        };
+//
+//    }
+//
+//    @Bean
+//    public Consumer deleteCoupon() {
+//        return request -> {
+//            log.info("received: {}", request);
+//            List params = Arrays.stream(request.split(",")).map(Long::valueOf).collect(Collectors.toList());
+//            customerService.deleteCoupon(params.get(0), params.get(1));
+//        };
+//    }
 }
